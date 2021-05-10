@@ -57,7 +57,7 @@ def get_content(chapters):
         # print(response.text)
 
 
-        content_all = re.search('m-post"(.*)</div>',response.text)
+        content_all = re.search('m-post"(.*)</div>',response.text,re.S)   #加上re.s 因为 . 无法匹配\n换行符，当文章中有换行符时，会出错，所以加上re.S，使得 . 号可以匹配所有字符
 
         contents = re.findall('<p>(.*?)</p>', content_all.group())
         for content in contents:
@@ -71,15 +71,8 @@ def get_content(chapters):
 
 
 
-
-
-
-
 url1 = "http://www.doupoxs.com/nalanwudi/"
 chapters = get_cateloges(url1)
-print(chapters)
-
-# url2 = 'http://www.doupoxs.com/nalanwudi/3057.html'
 
 get_content(chapters)
 
