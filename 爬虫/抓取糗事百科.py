@@ -4,6 +4,7 @@ import requests
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'}
 
 
+
 def get_joke(url):
 
     r = requests.get(url=url,headers=headers)
@@ -25,11 +26,31 @@ def get_joke(url):
     #获取段子内容
     contents = re.findall('<div class="content">.*?<span>(.*?)</span>',r.text,re.S)
 
-    # a= contents[0].replace('<br/>','')
-    for content in contents:
-        a = content.replace('<br/>','\n').replace('<br>','\n')
-        f = open('C:\\Users\\Administrator\\Desktop\\糗事百科.txt', 'a+',encoding='utf-8')   #写入文件时后面要加上 encoding = 'utf-8',否则会报错
-        f.write(a)
+    joke_list = []
+    for id,leval,sex,content in zip(ids,levals,sexs,contents):
+
+        info = {'id':id,'leval':leval,'sex':sex,'content':content,}
+        # print(info)
+
+        joke_list.append(info)
+
+    # print(len(joke_list))
+
+
+    for joke in joke_list:
+        f = open('C:\\Users\\Administrator\\Desktop\\糗事百科.txt', 'a+',encoding='utf-8')  # 写入文件时后面要加上 encoding = 'utf-8',否则会报错
+
+        try:
+            f.write('\n\n'+'用户名：'+'\t'+joke['id']+'\n')
+            f.write('用户级别：'+joke['leval']+'\n')
+            f.write('用户性别：'+joke['sex']+'\n')
+
+            a = joke['content'].replace('<br/>','\n').replace('<br>','\n').replace('\n','')
+
+            f.write(a)
+            f.close()
+        except:
+            pass
 
 #生成前三十页url
 # url_list = ['https://www.qiushibaike.com/text/page/{}/'.format(str(i)) for i in range(1,31)]
